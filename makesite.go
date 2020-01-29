@@ -1,7 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io/ioutil"
+)
 
 func main() {
-	fmt.Println("Hello, world!")
+	data, err := ioutil.ReadFile("first-post.txt")
+	if err != nil {
+		fmt.Println("File reading error", err)
+		return
+	}
+	fmt.Println(string(data))
+
 }
