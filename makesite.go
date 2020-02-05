@@ -1,16 +1,31 @@
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
+	"html/template"
+	"os"
 )
 
-func main() {
-	data, err := ioutil.ReadFile("first-post.txt")
-	if err != nil {
-		fmt.Println("File reading error", err)
-		return
-	}
-	fmt.Println(string(data))
+type entry struct {
+	Name string
+	Done bool
+}
 
+type ToDo struct {
+	User string
+	List []entry
+}
+
+func main() {
+	// Parse data -- omitted for brevity
+
+	// Files are provided as a slice of strings.
+	paths := []string{
+		"todo.tmpl",
+	}
+
+	t := template.Must(template.New("html-tmpl").ParseFiles(paths...))
+	err = t.Execute(os.Stdout, todos)
+	if err != nil {
+		panic(err)
+	}
 }
