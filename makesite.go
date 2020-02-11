@@ -61,8 +61,8 @@ func templateWriter(templateName string, fileName string) {
 	}
 }
 
-func txtSearcher() {
-	directory := flag.String("directory", "/Users/abhishekkulkarni", "Path to the directory to traverse through")
+func directoryParser() {
+	directory := flag.String("directory", "/Users/abhishekkulkarni/go/src/makesite", "Path to the directory to traverse through")
 	flag.Parse()
 	files, err := ioutil.ReadDir(*directory)
 	if err != nil {
@@ -71,17 +71,18 @@ func txtSearcher() {
 
 	for _, file := range files {
 		if file.IsDir() {
-			fmt.Printf("[%t] %s\n", file.IsDir(), file.Name())
+			// fmt.Printf("[%t] %s\n", file.IsDir(), file.Name())
 		} else {
-			fmt.Printf("[%t] %s\n", file.IsDir(), file.Name())
+			textFile := ".txt"
+			if filepath.Ext(strings.TrimSpace(file.Name())) == textFile {
+				fmt.Printf(" %s\n", file.Name())
+				templateWriter("template.tmpl", file.Name())
+			}
 		}
 	}
 }
 
 func main() {
-	cmdFileName := os.Args[1]                  
-	templateRenderer("template.tmpl", readFile(cmdFileName)) 
-	templateWriter("template.tmpl", cmdFileName)
-	txtSearcher()
+	directoryParser()
 
 }
