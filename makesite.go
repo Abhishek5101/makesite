@@ -84,5 +84,5 @@ func directoryParser() {
 
 func main() {
 	directoryParser()
-
+	translateText("mr", "The Go Gopher is cute")
 }
