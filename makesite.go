@@ -2,17 +2,17 @@ package main
 
 import (
 	"flag"
-	"log"
 	"fmt"
 	"html/template"
 	"io/ioutil"
+	"log"
 	"os"
-	"strings"
 	"path/filepath"
+	"strings"
 )
 
 type entry struct {
-	paragraph string
+	Paragraph string
 }
 
 func readFile(name string) string {
@@ -32,8 +32,23 @@ func writeFile(name string, data string) {
 	}
 }
 
+func writeTranslate(filename string, lang string) {
+	FileText := readFile(filename)
+
+	contents, error := TranslateText(lang, FileText)
+	if error != nil {
+		panic(error)
+	}
+	bytesToWrite := []byte(contents)
+
+	err := ioutil.WriteFile(filename, bytesToWrite, 0644)
+	if err != nil {
+		panic(err)
+	}
+}
+
 func templateRenderer(filename string, data interface{}) {
-	t := template.Must(template.New("template.tmpl").ParseFiles(filename))
+	t := template.Must(template.New(filename).ParseFiles(filename))
 	err := t.Execute(os.Stdout, data)
 	if err != nil {
 		panic(err)
@@ -45,9 +60,9 @@ func txtToHTML(input string) string {
 	return fileName
 }
 
-func templateWriter(templateName string, fileName string) {
+func templateWriter(lang string, templateName string, fileName string) {
 
-	textParagraph := entry{readFile(fileName)}
+	textParagraph := entry{Paragraph: readFile(fileName)}
 	t := template.Must(template.New("template.tmpl").ParseFiles(templateName))
 
 	file, err := os.Create(txtToHTML(fileName))
@@ -62,9 +77,14 @@ func templateWriter(templateName string, fileName string) {
 }
 
 func directoryParser() {
-	directory := flag.String("directory", "/Users/abhishekkulkarni/go/src/makesite", "Path to the directory to traverse through")
+	var directory string
+	flag.StringVar(&directory, "dir", ".", "This is the directory.")
+
+	var lang string
+	flag.StringVar(&lang, "lang", "es", "This is the language you want to translate, inputting google's language abbreviations.")
 	flag.Parse()
-	files, err := ioutil.ReadDir(*directory)
+
+	files, err := ioutil.ReadDir(directory)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -76,7 +96,8 @@ func directoryParser() {
 			textFile := ".txt"
 			if filepath.Ext(strings.TrimSpace(file.Name())) == textFile {
 				fmt.Printf(" %s\n", file.Name())
-				templateWriter("template.tmpl", file.Name())
+				writeTranslate(file.Name(), lang)
+				templateWriter(lang, "template.tmpl", file.Name())
 			}
 		}
 	}
@@ -84,5 +105,4 @@ func directoryParser() {
 
 func main() {
 	directoryParser()
-	translateText("mr", "The Go Gopher is cute")
 }

@@ -1,44 +1,32 @@
-package main
-// GOOGLE_APPLICATION_CREDENTIALS="/Users/abhishekkulkarni/Desktop/random/peppy-destiny-222123-b9bd52967a14.json"
+package main 
 import (
 	"context"
 	"fmt"
-
-	translate "cloud.google.com/go/translate/apiv3"
-	translatepb "google.golang.org/genproto/googleapis/cloud/translate/v3"
+	"cloud.google.com/go/translate"
+	"golang.org/x/text/language"
 )
-// translateText translates input text and returns translated text.
-func translateText(w io.Writer, projectID string, sourceLang string, targetLang string, text string) error {
-	// projectID := "my-project-id"
-	// sourceLang := "en-US"
-	// targetLang := "fr"
-	// text := "Text you wish to translate"
 
+func TranslateText(targetLanguage, text string) (string, error) {
+	// text := "The Go Gopher is cute"
 	ctx := context.Background()
-	client, err := translate.NewTranslationClient(ctx)
+
+	lang, err := language.Parse(targetLanguage)
 	if err != nil {
-			return fmt.Errorf("NewTranslationClient: %v", err)
+			return "", fmt.Errorf("language.Parse: %v", err)
+	}
+
+	client, err := translate.NewClient(ctx)
+	if err != nil {
+			return "", err
 	}
 	defer client.Close()
 
-	req := &translatepb.TranslateTextRequest{
-			Parent:             fmt.Sprintf("projects/%s/locations/global", projectID),
-			SourceLanguageCode: sourceLang,
-			TargetLanguageCode: targetLang,
-			MimeType:           "text/plain", // Mime types: "text/plain", "text/html"
-			Contents:           []string{text},
-	}
-
-	resp, err := client.TranslateText(ctx, req)
+	resp, err := client.Translate(ctx, []string{text}, lang, nil)
 	if err != nil {
-			return fmt.Errorf("TranslateText: %v", err)
+			return "", fmt.Errorf("Translate: %v", err)
 	}
-
-	// Display the translation for each input text provided
-	for _, translation := range resp.GetTranslations() {
-			fmt.Fprintf(w, "Translated text: %v\n", translation.GetTranslatedText())
+	if len(resp) == 0 {
+			return "", fmt.Errorf("Translate returned empty response to text: %s", text)
 	}
-
-	return nil
+	return resp[0].Text, nil
 }
-
