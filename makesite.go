@@ -81,7 +81,7 @@ func directoryParser() {
 	flag.StringVar(&directory, "dir", ".", "This is the directory.")
 
 	var lang string
-	flag.StringVar(&lang, "lang", "es", "This is the language you want to translate, inputting google's language abbreviations.")
+	flag.StringVar(&lang, "lang", "mr", "This is the language you want to translate, inputting google's language abbreviations.")
 	flag.Parse()
 
 	files, err := ioutil.ReadDir(directory)
