@@ -83,6 +83,16 @@ If you get stuck on any step, be sure to print the output to `stdout`!
 - [ ] Determine how long it took to execute your static site generator. Modify the success message to read: `Success! Generated 5 pages (18.2kB total) in 3.25 seconds.` Always return two significant digits after the decimal point.
 - [ ] Test your solutions to these stretch challenges on many different directories containing `.txt` files. Are there any ways to make your code faster?
 
+### v1.2
+
+#### v1.2 Requirements
+
+- [x] Initialize Go modules in your project.
+- [x] Add any third party library to your project to enhance it's functionality. Some ideas you might consider include **_(CHOOSE ONLY ONE)_**:
+    - [ ] Translating page content using Google Translate.
+    - [ ] Parse Markdown (`.md`) files and transform them into HTML. `#` through `######` should translate to `<h1>` through `<h6>` elements.
+    - [ ] **_FILL IN THE BLANK_**: `I will use the Google Translation library. The documentation is located at https://cloud.google.com/translate/docs/basic/translating-text. My goal is to use it to translate text in my generated HTML files into user's language of choice.`
+- [x] **Add, commit, and push to GitHub**.
 
 ## Resources
 
@@ -97,3 +107,4 @@ If you get stuck on any step, be sure to print the output to `stdout`!
 - [**Go By Example**: Panic](https://gobyexample.com/panic)
 - [**GopherAcademy**: Using Go Templates](https://blog.gopheracademy.com/advent-2017/using-go-templates/)
 - [**rapid7.com**: Building a Simple CLI Tool with Golang](https://blog.rapid7.com/2016/08/04/build-a-simple-cli-tool-with-golang/)
+
